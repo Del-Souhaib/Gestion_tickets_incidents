@@ -13,11 +13,15 @@ public class Ticket {
     private Long id;
 
     private String name;
-
     private String description;
 
     @Column( nullable = true)
     private String image;
+
+    private String urgence;
+    private String environnement;
+    private String logiciel;
+    private String etat;
 
     public Ticket() {
     }
@@ -28,11 +32,18 @@ public class Ticket {
         this.description = description;
         this.image = image;
     }
-    public Ticket( String name, String description, String image) {
+
+    public Ticket(Long id, String name, String description, String image, String urgence, String environnement, String logiciel, String etat) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.image = image;
+        this.urgence = urgence;
+        this.environnement = environnement;
+        this.logiciel = logiciel;
+        this.etat = etat;
     }
+
     public Long getId() {
         return id;
     }
@@ -63,5 +74,37 @@ public class Ticket {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getUrgence() {
+        return urgence;
+    }
+
+    public void setUrgence(String urgence) {
+        this.urgence = urgence;
+    }
+
+    public String getEnvironnement() {
+        return environnement;
+    }
+
+    public void setEnvironnement(String environnement) {
+        this.environnement = environnement;
+    }
+
+    public String getLogiciel() {
+        return logiciel;
+    }
+
+    public void setLogiciel(String logiciel) {
+        this.logiciel = logiciel;
+    }
+
+    public String getEtat() {
+        return etat;
+    }
+
+    public void setEtat(String etat) {
+        this.etat = etat;
     }
 }

@@ -1,70 +1,77 @@
 package com.example.gestion_tickets_incidents.security;
 
+import com.example.gestion_tickets_incidents.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import com.example.gestion_tickets_incidents.security.PasswordConfig.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
-import static com.example.gestion_tickets_incidents.security.ApplicationRoles.*;
-
-@Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public WebSecurityConfig(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
+    UserService userService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    UserDetailsService userDetailsService;
+//    @Bean
+//    public DaoAuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
+//        auth.setUserDetailsService(userService);
+//        auth.setPasswordEncoder(passwordEncoder);
+//        return auth;
+//
+//    }
+
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService);
     }
+
+
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.authorizeRequests().antMatchers("/").permitAll()
                 .anyRequest().authenticated();
-        http.formLogin().loginPage("/login").permitAll()
-                .defaultSuccessUrl("/succeslogin", true);
+        http.formLogin().permitAll()
+                .defaultSuccessUrl("/", true);
         http.csrf().disable();
-        http.rememberMe().and();
-//        http.csrf().ignoringAntMatchers("/api/**");
+        http.rememberMe().and().logout().logoutSuccessUrl("/login");
     }
 
+//    @Override
+//    public void configure(WebSecurity web) throws Exception {
+//        web.ignoring().antMatchers("**");
+//    }
 
-    @Bean
-    @Override
-    public UserDetailsService userDetailsService() {
-        UserDetails user =
-                User.builder()
-                        .username("user")
-                        .password(passwordEncoder.encode("123456"))
-                        .roles(ADMIN.name())
-                        .build();
-
-        UserDetails user2 =
-                User.builder()
-                        .username("user2")
-                        .password(passwordEncoder.encode("123456"))
-                        .roles(DEVELOPER.name())
-                        .build();
-
-        UserDetails user3 =
-                User.builder()
-                        .username("user3")
-                        .password(passwordEncoder.encode("123456"))
-                        .roles(CLIENT.name())
-                        .build();
-        return new InMemoryUserDetailsManager(user, user2, user3);
-    }
-
-
+//    @Bean
+//    public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
+//        return new SecurityEvaluationContextExtension();
+//    }
+//@Bean
+//@Override
+//public UserDetailsService userDetailsService() {
+//    UserDetails user =
+//            User.withDefaultPasswordEncoder()
+//                    .username("user")
+//                    .password("password")
+//                    .roles("USER")
+//                    .build();
+//
+//    return new InMemoryUserDetailsManager(user);
+//}
 }

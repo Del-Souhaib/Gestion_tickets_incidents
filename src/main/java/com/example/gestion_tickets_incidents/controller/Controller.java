@@ -1,7 +1,7 @@
 package com.example.gestion_tickets_incidents.controller;
 
 import com.example.gestion_tickets_incidents.model.Ticket;
-import com.example.gestion_tickets_incidents.service.TicketService;
+import com.example.gestion_tickets_incidents.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ import java.util.List;
 @PreAuthorize("hasAnyRole('ADMIN','DEVELOPER')")
 public class Controller {
     @Autowired
-    private TicketService ticketService;
+    private TicketRepository ticketService;
 
 
     @GetMapping("")
