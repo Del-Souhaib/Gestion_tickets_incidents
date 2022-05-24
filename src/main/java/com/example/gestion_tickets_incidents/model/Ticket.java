@@ -1,9 +1,6 @@
 package com.example.gestion_tickets_incidents.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Ticket {
@@ -21,7 +18,15 @@ public class Ticket {
     private String urgence;
     private String environnement;
     private String logiciel;
+
     private String etat;
+
+    @ManyToOne
+    @JoinColumn(nullable = true)
+    private User developeur;
+
+    @ManyToOne
+    private User client;
 
     public Ticket() {
     }
@@ -33,7 +38,20 @@ public class Ticket {
         this.image = image;
     }
 
-    public Ticket(Long id, String name, String description, String image, String urgence, String environnement, String logiciel, String etat) {
+
+
+    public Ticket(String name, String description, String image, String urgence, String environnement, String logiciel,   User client) {
+        this.name = name;
+        this.description = description;
+        this.image = image;
+        this.urgence = urgence;
+        this.environnement = environnement;
+        this.logiciel = logiciel;
+        this.client = client;
+        this.etat="ouverture";
+    }
+
+    public Ticket(Long id, String name, String description, String image, String urgence, String environnement, String logiciel, String etat, User developeur, User client) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -42,6 +60,8 @@ public class Ticket {
         this.environnement = environnement;
         this.logiciel = logiciel;
         this.etat = etat;
+        this.developeur = developeur;
+        this.client = client;
     }
 
     public Long getId() {
@@ -106,5 +126,21 @@ public class Ticket {
 
     public void setEtat(String etat) {
         this.etat = etat;
+    }
+
+    public User getDevelopeur() {
+        return developeur;
+    }
+
+    public void setDevelopeur(User developeur) {
+        this.developeur = developeur;
+    }
+
+    public User getClient() {
+        return client;
+    }
+
+    public void setClient(User client) {
+        this.client = client;
     }
 }

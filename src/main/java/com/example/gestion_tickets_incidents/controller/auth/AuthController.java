@@ -12,14 +12,13 @@ import java.net.http.HttpRequest;
 @RequestMapping("/")
 public class AuthController {
 
-//    @GetMapping("login")
-//    public String login() {
-//        return "auth/login2";
-//    }
+    @GetMapping(value = "/login")
+    public String login() {
+        return "auth/login";
+    }
 
     @GetMapping("")
-    @PreAuthorize("hasAnyRole('Administrateur2')")
-    @isAuthenticated
+    @PreAuthorize("isAuthenticated()")
     public String succeslogin(HttpServletRequest request) {
 //        if (request.isUserInRole("ADMIN")){
 //            return "index";
