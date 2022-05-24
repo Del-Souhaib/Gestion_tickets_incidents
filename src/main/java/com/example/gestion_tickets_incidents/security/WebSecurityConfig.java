@@ -23,29 +23,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     UserService userService;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
     PasswordConfig passwordConfig;
 
     //    UserDetailsService userDetailsService;
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider());
-    }
+
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
         auth.setUserDetailsService(userService);
-        auth.setPasswordEncoder(passwordEncoder);
+        auth.setPasswordEncoder(getPasswordEncoder());
         return auth;
     }
+
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("/js/**", "/css/**", "/flags/**", "/fonts/**", "/images/**", "/plugins/**").permitAll()
                 .anyRequest().authenticated().
                 and().formLogin().loginPage("/login").defaultSuccessUrl("/")
-                .and().rememberMe().and().logout().permitAll().logoutSuccessUrl("/login")
+                .and().logout().permitAll().logoutSuccessUrl("/login")
                 .and().csrf().disable();
     }
 
@@ -57,4 +58,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder getPasswordEncoder() {
         return passwordConfig.passwordEncoder();
     }
+
 }

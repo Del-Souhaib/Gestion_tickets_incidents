@@ -28,4 +28,26 @@ public class TicketService {
         ticketRepository.delete(ticket);
     }
 
+    public List<Ticket> findAllByDevelopeurIsNull(){
+        return ticketRepository.findAllByDevelopeurIsNull();
+    }
+
+    public List<Ticket> findAllByDevelopeurEquals(String user){
+        return ticketRepository.findAllByDevelopeur_UsernameEquals(user);
+    }
+
+    public List<Ticket> findAllByClient_UsernameEquals(String user){
+        return ticketRepository.findAllByClient_UsernameEquals(user);
+    }
+//
+    public List<Ticket> search1(String search){
+        return ticketRepository.findByDescriptionOrNameOrEtatOrLogicielOrEnvironnementIsContainingAndDevelopeurIsNull(search,search,search,search,search);
+    }
+    public List<Ticket> search2(String search,String user){
+        return ticketRepository.findByDescriptionOrNameOrEtatOrLogicielOrEnvironnementIsContainingAndDevelopeur_UsernameEquals(search,search,search,search,search,user);
+    }
+    public List<Ticket> search3(String search,String user){
+        return ticketRepository.findByDescriptionOrNameOrEtatOrLogicielOrEnvironnementIsContainingAndClient_UsernameEquals(search,search,search,search,search,user);
+    }
+
 }

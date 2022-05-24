@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org">
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <title>tickets</title>
 
@@ -20,75 +20,7 @@
     <!--End sidebar-wrapper-->
 
     <!--Start topbar header-->
-    <header class="topbar-nav">
-        <nav class="navbar navbar-expand fixed-top">
-            <ul class="navbar-nav mr-auto align-items-center">
-                <li class="nav-item">
-                    <a class="nav-link toggle-menu" href="javascript:void();">
-                        <i class="icon-menu menu-icon"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <form class="search-bar">
-                        <input type="text" class="form-control" placeholder="Enter keywords">
-                        <a href="javascript:void();"><i class="icon-magnifier"></i></a>
-                    </form>
-                </li>
-            </ul>
-
-            <ul class="navbar-nav align-items-center right-nav-link">
-                <li class="nav-item dropdown-lg">
-                    <a class="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown"
-                       href="javascript:void();">
-                        <i class="fa fa-envelope-open-o"></i></a>
-                </li>
-                <li class="nav-item dropdown-lg">
-                    <a class="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown"
-                       href="javascript:void();">
-                        <i class="fa fa-bell-o"></i></a>
-                </li>
-                <li class="nav-item language">
-                    <a class="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown"
-                       href="javascript:void();"><i class="fa fa-flag"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        <li class="dropdown-item"><i class="flag-icon flag-icon-gb mr-2"></i> English</li>
-                        <li class="dropdown-item"><i class="flag-icon flag-icon-fr mr-2"></i> French</li>
-                        <li class="dropdown-item"><i class="flag-icon flag-icon-cn mr-2"></i> Chinese</li>
-                        <li class="dropdown-item"><i class="flag-icon flag-icon-de mr-2"></i> German</li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown" href="#">
-                        <span class="user-profile"><img src="https://via.placeholder.com/110x110" class="img-circle"
-                                                        alt="user avatar"></span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        <li class="dropdown-item user-details">
-                            <a href="javaScript:void();">
-                                <div class="media">
-                                    <div class="avatar"><img class="align-self-start mr-3"
-                                                             src="https://via.placeholder.com/110x110"
-                                                             alt="user avatar"></div>
-                                    <div class="media-body">
-                                        <h6 class="mt-2 user-title">Sarajhon Mccoy</h6>
-                                        <p class="user-subtitle">mccoy@example.com</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="dropdown-divider"></li>
-                        <li class="dropdown-item"><i class="icon-envelope mr-2"></i> Inbox</li>
-                        <li class="dropdown-divider"></li>
-                        <li class="dropdown-item"><i class="icon-wallet mr-2"></i> Account</li>
-                        <li class="dropdown-divider"></li>
-                        <li class="dropdown-item"><i class="icon-settings mr-2"></i> Setting</li>
-                        <li class="dropdown-divider"></li>
-                        <li class="dropdown-item"><i class="icon-power mr-2"></i> Logout</li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-    </header>
+    <th:block th:insert="parts/header :: copy"></th:block>
     <!--End topbar header-->
 
     <div class="clearfix"></div>
@@ -104,31 +36,32 @@
                     <div class="card">
                         <div class="card-header">Tickets
                             <div class="card-action">
-                                <div class="dropdown">
+                                <div class="dropdown" sec:authorize="hasAuthority('Role_Client')">
                                     <a href="javascript:void();" class="dropdown-toggle dropdown-toggle-nocaret"
                                        data-toggle="dropdown">
                                         <i class="icon-options"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="/tickets/ajouter" sec:authorize="hasRole('Role_Client')">Ajouter</a>
+                                        <a class="dropdown-item" href="/tickets/ajouter"
+                                           >Ajouter</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table align-items-center table-flush table-borderless">
+                            <table class="table align-items-center table-flush table-borderless" style="font-size: 11px">
                                 <thead>
                                 <tr>
-                                    <th>Id</th>
-                                    <th>Titre</th>
-                                    <th>Description</th>
-                                    <th>Envirenement</th>
-                                    <th>Logiciel</th>
-                                    <th>Urgence</th>
-                                    <th>Etat</th>
-                                    <th>Client</th>
-                                    <th>Developeur</th>
-                                    <th>Action</th>
+                                    <td>Id</td>
+                                    <td>Titre</td>
+                                    <td>Description</td>
+                                    <td>Envirenement</td>
+                                    <td>Logiciel</td>
+                                    <td>Urgence</td>
+                                    <td>Etat</td>
+                                    <td>Client</td>
+                                    <td>Developeur</td>
+                                    <td>Action</td>
 
                                 </tr>
                                 </thead>
@@ -155,11 +88,22 @@
 
 
                                     <td>
+                                        <div sec:authorize="hasAuthority('Role_Développeur')">
                                         <span th:if="${dat.etat=='ouverture'}" class="text-danger"
                                               th:classappend="${'readfield'+dat.id} ">ouverture</span>
-                                        <span th:if="${dat.etat=='résolu'}" class="text-success"
-                                              th:classappend="${'readfield'+dat.id}">résolu</span>
-                                        <select class="form-control form-control-sm editfield" sec:authorize="hasRole('Role_Développeur')"
+
+                                            <span th:if="${dat.etat=='résolu'}" class="text-success"
+                                                  th:classappend="${'readfield'+dat.id}">résolu</span>
+                                        </div>
+                                        <div sec:authorize="!hasAuthority('Role_Développeur')">
+                                        <span th:if="${dat.etat=='ouverture'}" class="text-danger"
+                                              >ouverture</span>
+
+                                            <span th:if="${dat.etat=='résolu'}" class="text-success"
+                                                  >résolu</span>
+                                        </div>
+                                        <select class="form-control form-control-sm editfield"
+                                                sec:authorize="hasAuthority('Role_Développeur')"
                                                 th:classappend="${'editfield'+dat.id}" targetfield="etat"
                                                 th:targetid="${dat.id}" style="display: none">
                                             <option value="ouverture" th:selected="${dat.etat eq 'ouverture'}">
@@ -174,12 +118,17 @@
                                         <span th:if="${dat.client}!=null" th:text="${dat.client.username}"></span>
                                     </td>
                                     <td>
-                                        <span th:if="${dat.developeur}!=null" th:classappend="${'readfield'+dat.id} "
+                                        <span th:if="${dat.developeur}!=null" th:classappend="${'readfield'+dat.id}"
+                                              sec:authorize="hasAuthority('Role_Administrateur')"
                                               th:text="${dat.developeur.username}"></span>
 
-                                        <select th:each="dev : ${devs}" class="form-control form-control-sm editfield" sec:authorize="hasRole('Role_Administrateur')"
+                                        <span th:if="${dat.developeur}!=null"
+                                              sec:authorize="!hasAuthority('Role_Administrateur')"
+                                              th:text="${dat.developeur.username}"></span>
+
+                                        <select th:each="dev : ${devs}" class="form-control form-control-sm editfield"
                                                 th:classappend="${'editfield'+dat.id}" targetfield="developer"
-                                                th:targetid="${dat.id}" style="display: none">
+                                                th:targetid="${dat.id}" style="display: none" sec:authorize="hasAuthority('Role_Administrateur')">
                                             <option></option>
 
                                             <option th:value="${dev.id}" th:text="${dev.username}"
@@ -194,7 +143,7 @@
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <span class="dropdown-item deletebutton" th:target="${dat.id}"
-                                                      style="cursor: pointer">Supprimer</span>
+                                                      style="cursor: pointer" sec:authorize="hasAuthority('Role_Administrateur')">Supprimer</span>
                                                 <span class="dropdown-item editbutton"
                                                       th:target="${dat.id}">Modifier</span>
 
@@ -285,7 +234,7 @@
                 <div class="d-flex align-items-center ">
                     <p class="mb-0 ml-3 " id="response-text" style="font-size: 20px"></p>
                 </div>
-                <button class="btn btn-danger mt-4">Supprimer</button>
+                <button class="btn btn-light mt-4">Supprimer</button>
             </form>
         </div>
     </div>

@@ -41,7 +41,7 @@
                     <div class="form-group">
                         <label for="username" class="sr-only">Username</label>
                         <div class="position-relative has-icon-right">
-                            <input type="text" id="username" th:name="username" class="form-control input-shadow"
+                            <input type="text" id="username" required th:name="username" class="form-control input-shadow"
                                    placeholder="Enter Username">
                             <div class="form-control-position">
                                 <i class="icon-user"></i>
@@ -51,7 +51,7 @@
                     <div class="form-group">
                         <label for="password" class="sr-only">Password</label>
                         <div class="position-relative has-icon-right">
-                            <input type="password" id="password" th:name="password" class="form-control input-shadow"
+                            <input type="password" id="password" required th:name="password" class="form-control input-shadow"
                                    placeholder="Enter Password">
                             <div class="form-control-position">
                                 <i class="icon-lock"></i>
@@ -65,39 +65,39 @@
                                 <label for="remember-me">Remember me</label>
                             </div>
                         </div>
-                        <div class="form-group col-6 text-right">
-                            <a href="reset-password.html">Reset Password</a>
-                        </div>
+<!--                        <div class="form-group col-6 text-right">-->
+<!--                            <a href="reset-password.html">Reset Password</a>-->
+<!--                        </div>-->
                     </div>
                     <button class="btn btn-light btn-block" type="submit">Sign In</button>
-                    <div class="text-center mt-3">Sign In With</div>
+<!--                    <div class="text-center mt-3">Sign In With</div>-->
 
-                    <div class="form-row mt-4">
-                        <div class="form-group mb-0 col-6">
-                            <button type="button" class="btn btn-light btn-block"><i class="fa fa-facebook-square"></i>
-                                Facebook
-                            </button>
-                        </div>
-                        <div class="form-group mb-0 col-6 text-right">
-                            <button type="button" class="btn btn-light btn-block"><i class="fa fa-twitter-square"></i>
-                                Twitter
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row text-danger">
+<!--                    <div class="form-row mt-4">-->
+<!--                        <div class="form-group mb-0 col-6">-->
+<!--                            <button type="button" class="btn btn-light btn-block"><i class="fa fa-facebook-square"></i>-->
+<!--                                Facebook-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                        <div class="form-group mb-0 col-6 text-right">-->
+<!--                            <button type="button" class="btn btn-light btn-block"><i class="fa fa-twitter-square"></i>-->
+<!--                                Twitter-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <div class="row text-danger mt-3">
                         <div th:if="${param.error}">
-                            Invalid username and password.
+                            Utilisateur ou mot de passe est inccorect.
                         </div>
                         <div th:if="${param.logout}">
-                            You have been logged out.
+                             logged out.
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="card-footer text-center py-3">
-            <p class="text-warning mb-0">Do not have an account? <a href="register.html"> Sign Up here</a></p>
-        </div>
+<!--        <div class="card-footer text-center py-3">-->
+<!--            <p class="text-warning mb-0">Do not have an account? <a href="register.html"> Sign Up here</a></p>-->
+<!--        </div>-->
     </div>
 
     <!--Start Back To Top Button-->

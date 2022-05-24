@@ -7,11 +7,16 @@ import com.example.gestion_tickets_incidents.service.RoleService;
 import com.example.gestion_tickets_incidents.service.TicketService;
 import com.example.gestion_tickets_incidents.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,16 +33,22 @@ public class AdminTicketController {
     @Autowired
     RoleService roleService;
 
-    @GetMapping("/role")
-    public List<User> role(Model model) {
-        List<User> devs=userService.findFirstByRolesContains(roleService.findFirstByNom("Role_Administrateur"));
-        return devs;
-//        return roleService.findFirstByNom("Role_Développeur");
-    }
 
     @GetMapping("")
-    public String tickets(Model model) {
-        List<Ticket> data= ticketService.findAll();
+    @PreAuthorize("isAuthenticated()")
+    public String tickets(Model model, Principal principal) {
+        List<Ticket> data;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("Role_Administrateur"))) {
+            data= ticketService.findAllByDevelopeurIsNull();
+        }
+        else  if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("Role_Développeur"))) {
+            data= ticketService.findAllByDevelopeurEquals(principal.getName());
+        }
+        else {
+            data= ticketService.findAllByClient_UsernameEquals(principal.getName());
+        }
+
         List<User> devs=userService.findFirstByRolesContains(roleService.findFirstByNom("Role_Développeur"));
         model.addAttribute("data",data);
         model.addAttribute("devs",devs);
@@ -45,6 +56,7 @@ public class AdminTicketController {
         return "tickets/index";
     }
 
+    @PreAuthorize("hasAuthority('Role_Client')")
     @GetMapping("ajouter")
     public String ajouterticket(Model model) {
         Ticket data= new Ticket();
@@ -52,6 +64,7 @@ public class AdminTicketController {
         return "tickets/add";
     }
 
+    @PreAuthorize("hasAuthority('Role_Client')")
     @PostMapping("ajouter")
     public String ajouterticketclick(@ModelAttribute("data") Ticket data,@AuthenticationPrincipal User user ) {
         data.setClient(user);
@@ -60,13 +73,14 @@ public class AdminTicketController {
 //        return "redirect:/tickets";
     }
 
+    @PreAuthorize("hasAuthority('Role_Administrateur')")
     @PostMapping("supprimer/{id}")
     public String supprimer(@PathVariable Long id ) {
         ticketService.delete(ticketService.findById(id));
         return "redirect:/tickets";
     }
 
-
+    @PreAuthorize("hasAnyAuthority('Role_Administrateur','Role_Développeur')")
     @PostMapping("modifier/{id}/{field}/{newvalue}")
     @ResponseBody
     public String modifier(@PathVariable Long id,@PathVariable String field ,@PathVariable String newvalue) {
@@ -78,5 +92,26 @@ public class AdminTicketController {
         ticketService.save(ticket);
         return "Modifier success";
 
+    }
+
+    @GetMapping("search")
+    public String ticketssearch(Model model, Principal principal, @RequestParam String search) {
+        List<Ticket> data;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("Role_Administrateur"))) {
+            data= ticketService.search1(search);
+        }
+        else  if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("Role_Développeur"))) {
+            data= ticketService.search2(search,principal.getName());
+        }
+        else {
+            data= ticketService.search3(search,principal.getName());
+        }
+
+        List<User> devs=userService.findFirstByRolesContains(roleService.findFirstByNom("Role_Développeur"));
+        model.addAttribute("data",data);
+        model.addAttribute("devs",devs);
+
+        return "tickets/index";
     }
 }
