@@ -65,10 +65,12 @@ public class AdminTicketController {
     @PreAuthorize("hasAuthority('Role_Client')")
     @PostMapping("ajouter")
     public String ajouterticketclick(@ModelAttribute("data") Ticket data, @AuthenticationPrincipal User user) {
-        data.setClient(user);
-        return user.getUsername();
-//        ticketService.save(data);
-//        return "redirect:/tickets";
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(auth);
+        data.setClient((userService.findByUsername(auth.getName())));
+        data.setEtat("ouverture");
+        ticketService.save(data);
+        return "redirect:/tickets";
     }
 
     @PreAuthorize("hasAuthority('Role_Administrateur')")

@@ -236,7 +236,7 @@
                 <div class="d-flex align-items-center ">
                     <p class="mb-0 ml-3 " id="response-text" style="font-size: 20px"></p>
                 </div>
-                <button class="btn btn-light mt-4">Supprimer</button>
+                <button class="btn btn-light mt-4 deletebutonfinal" style="display: none">Supprimer</button>
             </form>
         </div>
     </div>
@@ -247,6 +247,7 @@
         $('.deletebutton').click(function () {
             $('.deleteform').attr('action', '/tickets/supprimer/' + $(this).attr('target'))
             $('#response-text').text("Vouler vous Supprimer ce ticket?")
+            $('.deletebutonfinal').show()
             $('#response-modal').modal('show')
         })
 
@@ -266,6 +267,7 @@
                     method: 'post',
                     success: function (e) {
                         $('#response-text').text(e)
+                        $('.deletebutonfinal').hide()
                         $('#response-modal').modal('show')
 
                     },

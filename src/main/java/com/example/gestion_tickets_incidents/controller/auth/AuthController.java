@@ -25,6 +25,6 @@ public class AuthController {
 //        }else  if (request.isUserInRole("DEVELOPER")){
 //            return "index";
 //        }
-        return "index";
+        return "redirect:/tickets";
     }
 }
